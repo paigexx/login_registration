@@ -19,6 +19,7 @@ class User:
         query = "INSERT INTO users (first_name, last_name, email, password, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s, NOW(), NOW());"
         return connectToMySQL("login_registration").query_db(query, data)
 
+
     @classmethod
     def get_user_by_email(cls, data):
         query = "SELECT * FROM users WHERE users.email = %(email)s;"
@@ -34,13 +35,24 @@ class User:
     def validate_reg(data):
         is_valid = True
         #  add a validation for only letters for first/last name
+
         if len(data["first_name"]) <= 2: 
             flash("You last name must be longer than 2 characters.")
             is_valid = False
-
+        
+        if not data["first_name"].isalpha():
+            flash("You name must be within the characters of the English alphabet.")
+            is_valid = False
+        
+        
         if len(data["last_name"]) <= 2: 
             flash("You last name must be longer than 2 characters.")
             is_valid = False
+
+        if not data["last_name"].isalpha():
+            flash("You name must be within the characters of the English alphabet.")
+            is_valid = False
+        
 
         if not email_regex.match(data["email"]):
             flash("Please enter a valid email.")

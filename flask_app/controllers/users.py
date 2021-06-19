@@ -28,12 +28,9 @@ def register_user():
     }
     print(request.form)
     user_id = User.create_user(data)
-    session['user_id'] = user_id
-    print("user created at id:")
-    print(user_id)   
+    session["user_id"] = user_id
 
-    
-    return redirect("/")
+    return render_template("success.html")
 
 
 @app.route("/user/login", methods=['POST'])
@@ -58,9 +55,9 @@ def login_user():
     session["user_id"] = user_in_db.id
     session["first_name"] = user_in_db.first_name
     print("id in session")
-    return redirect("/user/success")
+    return redirect("/user/welcome")
 
-@app.route("/user/success")
+@app.route("/user/welcome")
 def user_homepage():
     if not "user_id" in session:
         return redirect("/")
