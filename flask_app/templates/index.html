@@ -13,12 +13,12 @@
         <div class="registration">
             <h1>registration</h1>
             {% with messages = get_flashed_messages() %}     
-                {% if messages %}                            
-                    {% for message in messages %}            
-                        <p>{{message}}</p>                   
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% if messages %}                            
+                {% for message in messages %}            
+                    <p>{{message}}</p>                   
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
             <form action="/user/reg" method="POST">
                 <div class="mb-3">
                     <label for="first_name" class="form-label">first name: </label>
@@ -44,6 +44,7 @@
             </form>
         </div>
         <div class="login">
+            <h1>login</h1>
             {% with messages = get_flashed_messages() %}     
                 {% if messages %}                            
                     {% for message in messages %}            
@@ -51,7 +52,6 @@
                     {% endfor %}
                 {% endif %}
             {% endwith %}
-            <h1>login</h1>
             <form action="/user/login" method="POST">
                 <div class="mb-3">
                     <label for="email" class="form-label">email: </label>

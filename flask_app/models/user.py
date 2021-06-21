@@ -1,7 +1,7 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 import re
 from flask import flash
-email_regex = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
+
 
 class User:
     def __init__(self,data):
@@ -24,42 +24,42 @@ class User:
     def get_user_by_email(cls, data):
         query = "SELECT * FROM users WHERE users.email = %(email)s;"
         results = connectToMySQL("login_registration").query_db(query,data)
-        # That conditional is important in case that the query is empty. without the conditional it will crash
-        if len(results) < 1: 
-            return False
         print(results)
-        # DONT forget to wrap in clas
+        if len(results) < 1:
+            return False
         return cls(results[0])
 
     @staticmethod
     def validate_reg(data):
         is_valid = True
-        #  add a validation for only letters for first/last name
+        
+        email_regex = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
-        if len(data["first_name"]) <= 2: 
+
+        if len(data["first_name"]) <= 2 or not data["first_name"].isalpha(): 
             flash("You last name must be longer than 2 characters.")
             is_valid = False
         
-        if not data["first_name"].isalpha():
-            flash("You name must be within the characters of the English alphabet.")
-            is_valid = False
-        
-        
-        if len(data["last_name"]) <= 2: 
-            flash("You last name must be longer than 2 characters.")
+        if len(data["last_name"]) <= 2 or not data["last_name"].isalpha():
+            flash("You last name must be longer than 2 characters of the English alphabet.")
             is_valid = False
 
-        if not data["last_name"].isalpha():
-            flash("You name must be within the characters of the English alphabet.")
-            is_valid = False
-        
-
-        if not email_regex.match(data["email"]):
+        if not email_regex.match(data["email"]):  
             flash("Please enter a valid email.")
             is_valid = False
 
+        # query = "SELECT * FROM users WHERE users.email = %(email)s;"
+        # results = connectToMySQL("login_registration").query_db(query,data)
+        # if len(results) != 0:
+        #     flash("email is already in the database")
+        #     is_valid = False
+
+        if User.get_user_by_email(data): 
+            flash("Email address already exsits!")
+            is_valid = False
+
         if len(data["password"]) < 8:
-            flash("password must be 8 or more characters")
+            flash("Password must be 8 or more characters")
             is_valid = False
 
         if data["password"] != data["confirm_password"]:

@@ -6,7 +6,7 @@ bcrypt = Bcrypt(app)
 
 
 @app.route("/")
-def home_page():
+def index():
     return render_template("index.html")
 
 
@@ -29,8 +29,9 @@ def register_user():
     print(request.form)
     user_id = User.create_user(data)
     session["user_id"] = user_id
-
-    return render_template("success.html")
+    
+    flash("You've been registered. Please log in.")
+    return redirect("/")
 
 
 @app.route("/user/login", methods=['POST'])
