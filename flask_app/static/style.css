@@ -4,11 +4,14 @@
     box-sizing: border-box;
 }
 
+
+
 .container{
     display: flex;
     justify-content: space-around;
-    gap: 10em;
+    gap: 5em;
     padding: 3em;
+    
 }
 
 .login{
@@ -17,4 +20,35 @@
 
 .registration{
     flex: 3;
+}
+
+.flash_messages {
+    color: red;
+    text-align: center;
+    margin: 2em auto;
+    width: 20%;
+}
+
+/* homepage */
+
+header{
+    width: 80%;
+    margin: 0 auto;
+    padding: 2em;
+}
+.homepage_container{
+    width: 80%;
+    margin: 0 auto;
+    padding: 2em;
+}
+.homepage_header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.homepage_links{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }

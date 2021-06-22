@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Recipes</title>
+</head>
+<body>
+    <header class="homepage_header">
+        <h1>Welcome back, {{session["first_name"]}}!</h1>
+        <div class="homepage_links">
+            <a href="/user/create_recipe">Create Recipe</a>
+            <a href="/user/logout">Log out</a>
+        </div>
+    </header>   
+
+    <div class="homepage_container">
+        <p>These are your recipes:</p>
+        <table class="table">
+            <thead>
+                <th>Recipe Name</th>
+                <th>Under 30 mins?</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+            
+                <!-- for loop for recipes here -->
+                {% for recipe in user.recipes %}
+                <tr>
+                    <td>{{recipe.name}}</td>
+                    {% if recipe.under_30 == 1 %}
+                    <td> Yes</td>
+                    {% elif recipe.under_30 == 0 %}
+                    <td> No</td>
+                    {% endif %}
+                    <td><a href="/recipe/{{recipe.id}}">View Instructions </a><a href="/recipe/edit/{{recipe.id}}">Edit</a><a href="/recipe/delete/{{recipe.id}}">Delete</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    
+</body>
+</html>

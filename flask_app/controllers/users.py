@@ -1,3 +1,4 @@
+import re
 from flask_bcrypt import Bcrypt
 from flask_app import app
 from flask import redirect, request, render_template, flash, session
@@ -28,7 +29,6 @@ def register_user():
     }
     print(request.form)
     user_id = User.create_user(data)
-    session["user_id"] = user_id
     
     flash("You've been registered. Please log in.")
     return redirect("/")
@@ -56,13 +56,20 @@ def login_user():
     session["user_id"] = user_in_db.id
     session["first_name"] = user_in_db.first_name
     print("id in session")
-    return redirect("/user/welcome")
+    return redirect("/user/homepage")
 
-@app.route("/user/welcome")
+@app.route("/user/homepage")
 def user_homepage():
     if not "user_id" in session:
         return redirect("/")
-    return render_template("welcome.html")
+    data = {
+        "user_id": session["user_id"]
+    }
+
+    user = User.get_recipes(data)
+    return render_template("login.html", user= user)
+
+
 
 @app.route("/user/logout")
 def logout():

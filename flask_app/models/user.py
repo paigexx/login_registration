@@ -1,6 +1,7 @@
 from flask_app.config.mysqlconnection import connectToMySQL
 import re
-from flask import flash
+from flask import flash, redirect
+from flask_app.models.recipe import Recipe
 
 
 class User:
@@ -12,18 +13,19 @@ class User:
         self.password = data["password"]
         self.created_at = data["created_at"]
         self.updated_at = data["updated_at"]
+        self.recipes = []
 
     # returns a user id 
     @classmethod
     def create_user(cls, data):
         query = "INSERT INTO users (first_name, last_name, email, password, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password)s, NOW(), NOW());"
-        return connectToMySQL("login_registration").query_db(query, data)
+        return connectToMySQL("recipes").query_db(query, data)
 
 
     @classmethod
     def get_user_by_email(cls, data):
         query = "SELECT * FROM users WHERE users.email = %(email)s;"
-        results = connectToMySQL("login_registration").query_db(query,data)
+        results = connectToMySQL("recipes").query_db(query,data)
         print(results)
         if len(results) < 1:
             return False
@@ -48,11 +50,6 @@ class User:
             flash("Please enter a valid email.")
             is_valid = False
 
-        # query = "SELECT * FROM users WHERE users.email = %(email)s;"
-        # results = connectToMySQL("login_registration").query_db(query,data)
-        # if len(results) != 0:
-        #     flash("email is already in the database")
-        #     is_valid = False
 
         if User.get_user_by_email(data): 
             flash("Email address already exsits!")
@@ -68,3 +65,25 @@ class User:
 
         return is_valid
         
+    @classmethod
+    def get_recipes(cls, data):
+        query = "SELECT * FROM users LEFT JOIN recipes ON recipes.user_id = %(user_id)s WHERE users.id = %(user_id)s;"
+        results = connectToMySQL("recipes").query_db(query, data)
+        user = cls(results[0])
+        print(user)
+        print(user.first_name)
+
+        for row in results: 
+
+            recipe_data = {
+            "id": row["recipes.id"],
+            "name": row["name"],
+            "description": row["description"],
+            "instructions": row["instructions"],
+            "under_30": row["under_30"],
+            "made_on": row["made_on"]
+            }
+
+
+            user.recipes.append(Recipe(recipe_data))
+        return user
